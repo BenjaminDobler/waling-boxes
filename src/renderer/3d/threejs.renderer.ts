@@ -26,11 +26,11 @@ import {
     Box3,
     Object3D
 } from 'three';
-import { OrbitControls } from 'three-orbitcontrols-ts';
 import { Wall } from './objects/wall';
 import { GUI } from 'dat.gui';
 import { brickColors } from '../../types';
 import { createBoxWithRoundedEdges } from './utils';
+import { OrbitControls } from '@avatsaev/three-orbitcontrols-ts';
 
 let cameraMode = 'side';
 
@@ -62,7 +62,7 @@ export class ThreeRenderer {
 
         var geo = new PlaneBufferGeometry(800, 100, 8, 8);
         var mat = new MeshBasicMaterial({
-            color: 0x888888,
+            color: 0xebe5e7,
             side: DoubleSide
             // wireframe: true
         });
@@ -81,6 +81,7 @@ export class ThreeRenderer {
         );
 
         controls.enableZoom = true;
+        controls.enableKeys = false;
 
         const amb = new AmbientLight(0x444444);
         this.scene.add(amb);
@@ -167,7 +168,7 @@ class BoxCreature {
         this.group = new Group();
         const boxGeometry: BoxBufferGeometry = new BoxBufferGeometry(1, 2.5, 1);
         const boxMaterial: MeshLambertMaterial = new MeshLambertMaterial({
-            color: 0x00ff00
+            color: 0xad3525
         });
         this.body = new Mesh(boxGeometry, boxMaterial);
         this.body.position.y = 2.75;
@@ -176,7 +177,7 @@ class BoxCreature {
         this.head = new Group();
         const headGeometry: BoxBufferGeometry = new BoxBufferGeometry(2, 2, 2);
         const headMaterial: MeshLambertMaterial = new MeshLambertMaterial({
-            color: 0x00ff00
+            color: 0xfdd276
         });
         const headMesh = new Mesh(headGeometry, headMaterial);
         // headMesh.position.y = 4.6;
@@ -199,13 +200,66 @@ class BoxCreature {
         eyeRightMesh.position.x = 0.3;
         eyeRightMesh.position.y = 0.3;
 
+
+        const pupilGeometry = new BoxBufferGeometry(
+            0.2,
+            0.2,
+            0.2
+        );
+
+        const pupilMaterial: MeshLambertMaterial = new MeshLambertMaterial({
+            color: 0x000000
+        });
+        const pupilLeft = new Mesh(pupilGeometry, pupilMaterial);
+        pupilLeft.position.z = 1;
+        pupilLeft.position.x = -0.2;
+        pupilLeft.position.y = 0.2;
+
+        this.head.add(pupilLeft);
+
+
+        const pupilRight = new Mesh(pupilGeometry, pupilMaterial);
+        pupilRight.position.z = 1;
+        pupilRight.position.x = 0.2;
+        pupilRight.position.y = 0.2;
+
+        this.head.add(pupilRight);
+
+
+
         this.head.add(eyeRightMesh);
         this.head.add(eyeMesh);
         this.head.position.y = 4.6;
 
+
+        const mouthGeometry = new BoxBufferGeometry(
+            0.2,
+            0.2,
+            0.2
+        );
+
+        const mouthMaterial: MeshLambertMaterial = new MeshLambertMaterial({
+            color: 0x000000
+        });
+        const mouth = new Mesh(mouthGeometry, mouthMaterial);
+        mouth.position.z = 1;
+        mouth.position.x = 0;
+        mouth.position.y = -0.4;
+
+        this.head.add(mouth);
+
+
+
+
+
+
         this.head.add(headMesh);
 
         this.group.add(this.head);
+
+
+
+
 
         const armGeometry: BoxBufferGeometry = new BoxBufferGeometry(
             0.5,
@@ -213,7 +267,7 @@ class BoxCreature {
             0.5
         );
         const armMaterial: MeshLambertMaterial = new MeshLambertMaterial({
-            color: 0x00ff00
+            color: 0xfdd276
         });
 
         armGeometry.translate(0, -0.7, 0);
@@ -233,7 +287,7 @@ class BoxCreature {
             1.5
         );
         const feetMaterial: MeshLambertMaterial = new MeshLambertMaterial({
-            color: 0x00ff00
+            color: 0x000000
         });
 
         this.leftFeet = new Mesh(feetGeometry.clone(), feetMaterial);
